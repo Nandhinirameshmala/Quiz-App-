@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <div id="quiz-container">
+        <h1>Quiz Title</h1>
+        <p id="question">Question goes here?</p>
+        <ul id="answers">
+            <li><input type="radio" name="choice" value="1"> Option 1</li>
+            <li><input type="radio" name="choice" value="2"> Option 2</li>
+            <li><input type="radio" name="choice" value="3"> Option 3</li>
+        </ul>
+        <button id="submit">Submit</button>
+        <p id="result"></p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+#quiz-container {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    color: #333;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin: 10px 0;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+
+// script.js
+const questions = [
+    {
+        question: "What is the capital of France?",
+        answers: ["Paris", "London", "Berlin"],
+        correct: "Paris"
+    },
+    {
+        question: "What is the capital of Italy?",
+        answers: ["Rome","Madrid", "Paris"],
+        correct: "Rome"
+    },
+    {
+        question: "Which planet is known as the Red Planet?",
+        answers: ["Venus", "Jupiter", "Mars"],
+        correct: "Mars"
+    },
+    {
+        question: "What is the largest mammal in the world?",
+        answers: ["Elephant", "Blue Whale", "Elephant"],
+        correct: "Blue Whale"
+    },
+    {
+        question: "Who wrote the play Romeo and Juliet?",
+        answers: ["William Shakespeare", "Charles Dickens", "Jane Austen"],
+        correct: "William Shakespeare"
+    },
+    
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const questionElement = document.getElementById("question");
+const answerElements = document.querySelectorAll("input[type=radio]");
+const submitButton = document.getElementById("submit");
+const resultElement = document.getElementById("result");
+
+function loadQuestion() {
+    questionElement.textContent = questions[currentQuestion].question;
+    for (let i = 0; i < answerElements.length; i++) {
+        answerElements[i].value = questions[currentQuestion].answers[i];
+        answerElements[i].nextSibling.textContent = questions[currentQuestion].answers[i];
+    }
+}
+
+function checkAnswer() {
+    const selectedAnswer = document.querySelector('input[type=radio]:checked');
+    if (selectedAnswer) {
+        if (selectedAnswer.value === questions[currentQuestion].correct) {
+            score++;
+        }
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+}
+
+function showResult() {
+    questionElement.style.display = "none";
+    for (let answer of answerElements) {
+        answer.style.display = "none";
+    }
+    submitButton.style.display = "none";
+    resultElement.textContent = `You scored ${score} out of ${questions.length}`;
+}
+
+loadQuestion();
+submitButton.addEventListener("click", checkAnswer);
